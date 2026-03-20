@@ -42,11 +42,20 @@ def handle_question(client, question):
     print("----------------------")
     print(question)
 
-    timer_thread = threading.Thread(target=countdown_timer, args=(10,))
-    timer_thread.start()
+def countdown():
+    for i in range(10, 0, -1):
+        if stop_flag["stop"]:
+            break
+        print(f"Time remaining: {i}s", end="\r")
+        time.sleep(1)
 
-    answer = input("\nYour answer: ")
-    client.send(f"ANSWER|{answer}".encode())
+timer_thread = threading.Thread(target=countdown)
+timer_thread.start()
+
+answer = input("\nYour answer: ")
+stop_flag["stop"] = True
+
+client.send(f"ANSWER|{answer}".encode())
 
 
 # ----------------------------
@@ -69,10 +78,16 @@ def handle_message(client, data):
         print("\nℹ", content)
 
     elif msg_type == "SCORE":
-        print("\n🏆 LEADERBOARD")
-        players = content.split(",")
-        for i, p in enumerate(players, 1):
-            print(f"{i}. {p}")
+    print("\n🏆 LEADERBOARD")
+    print("----------------------")
+
+    players = content.split(",")
+
+    for i, p in enumerate(players, 1):
+        name, score = p.split(":")
+        print(f"{i}. {name} → {score} points")
+
+    print("----------------------")
 
     elif msg_type == "END":
         print("\n======================")
