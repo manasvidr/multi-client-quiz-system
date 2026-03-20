@@ -2,6 +2,8 @@ import socket
 import threading
 import json
 import time
+from scoring import check_answers, update_scores
+from leaderboard import generate_leaderboard, format_leaderboard
 
 HOST = "127.0.0.1"
 PORT = 5000
@@ -14,6 +16,7 @@ print("Server started...")
 
 clients = []
 players = {}   # conn → username
+player_scores = {}  # username → {score}
 answers = {}   # username → answer
 
 
@@ -42,6 +45,7 @@ def handle_client(conn, addr):
 
         if msg_type == "JOIN":
             players[conn] = username
+            layer_scores[username] = {"score": 0}
             print(username, "joined")
 
         # Listen for answers
@@ -57,7 +61,7 @@ def handle_client(conn, addr):
             msg_type, content = parts
 
             if msg_type == "ANSWER":
-                answers[players[conn]] = content
+                answers[players[conn]] = (content, time.time())
                 print(players[conn], "answered:", content)
 
     except:
@@ -98,6 +102,7 @@ with open("data/questions.json") as f:
 for q in questions:
 
     answers.clear()
+    question_start_time = time.time()
 
     question = q["question"]
 
@@ -119,10 +124,28 @@ for q in questions:
     print("\n--- Results ---")
     for player, ans in answers.items():
         print(f"{player} → {ans}")
+    processed_answers = {}
 
+    for player, (ans, timestamp) in answers.items():
+        time_taken = round(timestamp - question_start_time, 2)
+        processed_answers[player] = (ans, time_taken)
     # Correct answer
     correct = q["answer"]
     print(f"Correct Answer: {correct}")
+
+    
+    # --- SCORING (YOUR PART) ---
+    results = check_answers(correct, processed_answers)
+
+    update_scores(player_scores, results)
+
+    leaderboard = generate_leaderboard(player_scores)
+
+    score_msg = format_leaderboard(leaderboard)
+
+    print("Leaderboard:", score_msg)
+
+    broadcast(score_msg)
 
     # Send to clients
     broadcast(f"RESULT|Correct answer: {correct}")
