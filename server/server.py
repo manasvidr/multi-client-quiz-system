@@ -130,10 +130,10 @@ for q in questions:
     scores = {}
 
     for player, ans in answers.items():
-<<<<<<< Updated upstream
+
         print(f"{player} → {ans}")
     processed_answers = {}
-=======
+
      is_correct = check_answer(ans, correct)
 
     if is_correct:
@@ -151,7 +151,7 @@ for q in questions:
 
 # Send to clients
     broadcast(f"SCORE|{leaderboard}")
->>>>>>> Stashed changes
+
 
     for player, (ans, timestamp) in answers.items():
         time_taken = round(timestamp - question_start_time, 2)
