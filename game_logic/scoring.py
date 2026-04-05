@@ -1,34 +1,28 @@
-def check_answers(correct_answer, answers):
-    """
-    answers format:
-    {
-        "Alice": ("Paris", 3.2),
-        "Bob": ("London", 5.1)
-    }
-    """
-    results = {}
+def check_answer(player_answer: str, correct_answer: str, acceptable: list = None) -> bool:
+    norm_player = player_answer.strip().lower()
+    norm_correct = correct_answer.strip().lower()
 
-    for player, (ans, time_taken) in answers.items():
-        if ans.strip().lower() == correct_answer.strip().lower():
-            results[player] = {"correct": True, "time": time_taken}
-        else:
-            results[player] = {"correct": False, "time": time_taken}
+    if norm_player == norm_correct:
+        return True
 
-    return results
+    if acceptable:
+        for alt in acceptable:
+            if norm_player == alt.strip().lower():
+                return True
+
+    return False
 
 
-def update_scores(players, results):
-    """
-    players format:
-    {
-        "Alice": {"score": 0},
-        "Bob": {"score": 0}
-    }
-    """
-    for player, data in results.items():
-        if data["correct"]:
-            bonus = max(0, 10 - int(data["time"]))
-            players[player]["score"] += 10 + bonus
-        else:
-            # optional negative marking
-            players[player]["score"] -= 2
+def update_score(scores: dict, username: str, correct: bool, time_remaining: float = 0) -> dict:
+    if username not in scores:
+        scores[username] = 0
+
+    if correct:
+        bonus = int(time_remaining)
+        scores[username] += 10 + bonus
+
+    return scores
+
+
+def get_sorted_scores(scores: dict) -> list:
+    return sorted(scores.items(), key=lambda x: x[1], reverse=True)

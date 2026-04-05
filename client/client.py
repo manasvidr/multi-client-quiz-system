@@ -1,147 +1,145 @@
+# client/client.py
+
 import socket
 import threading
-import time
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from game_logic.leaderboard import display_leaderboard
 
 HOST = "127.0.0.1"
-PORT = 5000   # use teammate's port
+PORT = 5555
+
+current_question = None
+waiting_for_answer = False
+client_socket = None
 
 
-# ----------------------------
-# CONNECTION
-# ----------------------------
-def connect_to_server():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((HOST, PORT))
-    print("Connected to server!")
-    return client
+def connect_to_server(host: str, port: int) -> socket.socket:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    return s
 
 
-# ----------------------------
-# USER LOGIN
-# ----------------------------
-def send_username(client):
-    username = input("Enter your username: ")
-    client.send(f"JOIN|{username}".encode())
+def send_message(sock: socket.socket, message: str):
+    sock.sendall((message + "\n").encode())
 
 
-# ----------------------------
-# TIMER
-# ----------------------------
-def countdown_timer(seconds):
-    for i in range(seconds, 0, -1):
-        print(f"Time remaining: {i}s", end="\r")
-        time.sleep(1)
+def send_answer(sock: socket.socket, answer: str):
+    send_message(sock, f"ANSWER|{answer}")
 
 
-# ----------------------------
-# HANDLE QUESTION
-# ----------------------------
-def handle_question(client, question):
-    print("\n----------------------")
-    print("QUESTION")
-    print("----------------------")
-    print(question)
-
-def countdown():
-    for i in range(10, 0, -1):
-        if stop_flag["stop"]:
-            break
-        print(f"Time remaining: {i}s", end="\r")
-        time.sleep(1)
-
-timer_thread = threading.Thread(target=countdown)
-timer_thread.start()
-
-answer = input("\nYour answer: ")
-stop_flag["stop"] = True
-
-client.send(f"ANSWER|{answer}".encode())
+def receive_question(message: str):
+    global current_question, waiting_for_answer
+    _, question_text = message.split("|", 1)
+    current_question = question_text
+    waiting_for_answer = True
+    print(f"\n? QUESTION: {question_text}")
+    print("   Your answer: ", end="", flush=True)
 
 
-# ----------------------------
-# HANDLE MESSAGES
-# ----------------------------
-def handle_message(client, data):
-    try:
-        msg_type, content = data.split("|", 1)
-    except:
-        print("Invalid message:", data)
-        return True
+def handle_server_message(message: str):
+    global waiting_for_answer, current_question
 
-    if msg_type == "QUESTION":
-        handle_question(client, content)
+    if message.startswith("ACK|"):
+        print(f"\n{message.split('|', 1)[1]}")
 
-    elif msg_type == "RESULT":
-        print("\n✔ RESULT:", content)
+    elif message.startswith("INFO|"):
+        info = message.split('|', 1)[1]
+        print(f"\n  i  {info}")
+        if waiting_for_answer:
+            print("   Your answer: ", end="", flush=True)
 
-    elif msg_type == "INFO":
-        print("\nℹ", content)
+    elif message.startswith("QUESTION|"):
+        receive_question(message)
 
-    elif msg_type == "SCORE":
-    print("\n🏆 LEADERBOARD")
-    print("----------------------")
+    elif message.startswith("TIMER|"):
+        secs = message.split("|", 1)[1]
+        print(f"\n  You have {secs} seconds to answer!")
+        if waiting_for_answer:
+            print("   Your answer: ", end="", flush=True)
 
-    players = content.split(",")
+    elif message.startswith("RESULT|"):
+        waiting_for_answer = False
+        current_question = None
+        result = message.split("|", 1)[1]
+        print(f"\n {result}")
 
-    for i, p in enumerate(players, 1):
-        name, score = p.split(":")
-        print(f"{i}. {name} → {score} points")
+    elif message.startswith("SCORE|"):
+        display_leaderboard(message)
 
-    print("----------------------")
+    elif message.startswith("ERROR|"):
+        print(f"\n ERROR: {message.split('|', 1)[1]}")
+        sys.exit(1)
 
-    elif msg_type == "END":
-        print("\n======================")
-        print(content)
-        print("======================")
-        return False
-    
-    elif msg_type == "SCORE":
-        print("Leaderboard:", content)
+    elif message.startswith("END|"):
+        print(f"\n {message.split('|', 1)[1]}")
+        print("Game over. Goodbye!\n")
+        sys.exit(0)
 
     else:
-        print("\n[UNKNOWN]", data)
-
-    return True
+        print(f"\n[Server]: {message}")
 
 
-# ----------------------------
-# RECEIVE LOOP
-# ----------------------------
-def receive_messages(client):
+def listen_to_server(sock: socket.socket):
+    buffer = ""
     while True:
         try:
-            data = client.recv(1024).decode()
-
+            data = sock.recv(1024).decode()
             if not data:
-                break
+                print("\n[Client] Server closed connection.")
+                sys.exit(0)
+            buffer += data
+            while "\n" in buffer:
+                line, buffer = buffer.split("\n", 1)
+                line = line.strip()
+                if line:
+                    handle_server_message(line)
+        except Exception as e:
+            print(f"\n[Client] Connection error: {e}")
+            sys.exit(1)
 
-            print("DEBUG:", data)  # helpful for now
 
-            keep_running = handle_message(client, data)
+def main():
+    global client_socket
 
-            if not keep_running:
-                break
+    host = sys.argv[1] if len(sys.argv) >= 2 else HOST
+    port = int(sys.argv[2]) if len(sys.argv) >= 3 else PORT
 
-        except:
+    print("=" * 40)
+    print("      WELCOME TO THE QUIZ GAME ")
+    print("=" * 40)
+
+    username = input("Enter your username: ").strip()
+    if not username:
+        print("Username cannot be empty.")
+        sys.exit(1)
+
+    try:
+        client_socket = connect_to_server(host, port)
+        print(f"[Client] Connected to server at {host}:{port}")
+    except Exception as e:
+        print(f"[Client] Could not connect: {e}")
+        sys.exit(1)
+
+    send_message(client_socket, f"JOIN|{username}")
+
+    listener = threading.Thread(target=listen_to_server, args=(client_socket,), daemon=True)
+    listener.start()
+
+    while True:
+        try:
+            user_input = input()
+            if waiting_for_answer and user_input.strip():
+                send_answer(client_socket, user_input.strip())
+        except EOFError:
+            break
+        except KeyboardInterrupt:
+            print("\n[Client] Disconnected.")
             break
 
-
-# ----------------------------
-# MAIN
-# ----------------------------
-def main():
-    try:
-        client = connect_to_server()
-        send_username(client)
-
-        receive_messages(client)
-
-    except ConnectionRefusedError:
-        print("Server not running.")
-
-    finally:
-        print("Disconnecting...")
-        client.close()
+    client_socket.close()
 
 
 if __name__ == "__main__":
