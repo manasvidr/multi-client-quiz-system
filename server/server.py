@@ -1,3 +1,5 @@
+from game_logic.scoring import check_answer
+from game_logic.leaderboard import generate_leaderboard
 import socket
 import threading
 import json
@@ -122,9 +124,34 @@ for q in questions:
 
     # Results
     print("\n--- Results ---")
+
+    correct = q["answer"]
+
+    scores = {}
+
     for player, ans in answers.items():
+<<<<<<< Updated upstream
         print(f"{player} → {ans}")
     processed_answers = {}
+=======
+     is_correct = check_answer(ans, correct)
+
+    if is_correct:
+        scores[player] = 10
+    else:
+        scores[player] = 0
+
+    print(f"{player} → {ans} ({'Correct' if is_correct else 'Wrong'})")
+
+
+# Generate leaderboard
+    leaderboard = generate_leaderboard(scores)
+
+    print("\nLeaderboard:", leaderboard)
+
+# Send to clients
+    broadcast(f"SCORE|{leaderboard}")
+>>>>>>> Stashed changes
 
     for player, (ans, timestamp) in answers.items():
         time_taken = round(timestamp - question_start_time, 2)

@@ -94,6 +94,9 @@ def handle_message(client, data):
         print(content)
         print("======================")
         return False
+    
+    elif msg_type == "SCORE":
+        print("Leaderboard:", content)
 
     else:
         print("\n[UNKNOWN]", data)
