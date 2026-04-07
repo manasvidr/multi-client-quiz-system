@@ -1,14 +1,146 @@
-[
-  {
-    "question": "Capital of France?",
-    "answer": "Paris"
-  },
-  {
-    "question": "5 + 7?",
-    "answer": "12"
-  },
-  {
-    "question": "Largest planet?",
-    "answer": "Jupiter"
-  }
-]
+{
+  "Computer_Science": [
+    {"question":"Worst-case time complexity of QuickSort?","options":["O(n log n)","O(n^2)","O(log n)","O(n)"],"answer":"O(n^2)"},
+    {"question":"Which scheduling causes starvation?","options":["FCFS","RR","Priority","SJF"],"answer":"Priority"},
+    {"question":"Which normal form removes transitive dependency?","options":["1NF","2NF","3NF","BCNF"],"answer":"3NF"},
+    {"question":"Connectionless protocol?","options":["TCP","UDP","FTP","HTTP"],"answer":"UDP"},
+    {"question":"Data structure used in BFS?","options":["Stack","Queue","Heap","Tree"],"answer":"Queue"},
+    {"question":"Deadlock condition?","options":["No mutual exclusion","Circular wait","No hold","Preemption"],"answer":"Circular wait"},
+    {"question":"Fastest for equality search?","options":["B+ Tree","Hash","Bitmap","Cluster"],"answer":"Hash"},
+    {"question":"OSI layer for encryption?","options":["Transport","Session","Presentation","Application"],"answer":"Presentation"},
+    {"question":"Binary search complexity?","options":["O(n)","O(log n)","O(n log n)","O(1)"],"answer":"O(log n)"},
+    {"question":"Not ACID property?","options":["Atomicity","Consistency","Isolation","Duplication"],"answer":"Duplication"},
+    {"question":"Traversal giving sorted BST?","options":["Pre","In","Post","Level"],"answer":"In"},
+    {"question":"Volatile memory?","options":["ROM","SSD","RAM","HDD"],"answer":"RAM"},
+    {"question":"Port 443?","options":["HTTP","HTTPS","FTP","SMTP"],"answer":"HTTPS"},
+    {"question":"Shortest path algorithm?","options":["DFS","BFS","Dijkstra","Kruskal"],"answer":"Dijkstra"},
+    {"question":"SQL duplicate removal?","options":["UNIQUE","DISTINCT","FILTER","REMOVE"],"answer":"DISTINCT"},
+    {"question":"Stack overflow occurs when?","options":["Empty","Full","Null","Pointer"],"answer":"Full"},
+    {"question":"Paging avoids?","options":["Fragmentation","Deadlock","Starvation","Thrashing"],"answer":"Fragmentation"},
+    {"question":"Which is NP-complete?","options":["Sorting","Searching","TSP","Binary search"],"answer":"TSP"},
+    {"question":"Primary key property?","options":["Null","Duplicate","Unique","Optional"],"answer":"Unique"},
+    {"question":"TCP is?","options":["Connectionless","Reliable","Unordered","Broadcast"],"answer":"Reliable"},
+    {"question":"Heap structure?","options":["Sorted","Complete tree","Balanced","Linked"],"answer":"Complete tree"},
+    {"question":"Semaphore used for?","options":["Memory","Sync","Sorting","IO"],"answer":"Sync"},
+    {"question":"Which join fastest?","options":["Nested","Hash","Merge","Cartesian"],"answer":"Hash"},
+    {"question":"Compiler phase?","options":["Lexical","Cooking","Linking","Uploading"],"answer":"Lexical"},
+    {"question":"DFS uses?","options":["Queue","Stack","Heap","Array"],"answer":"Stack"}
+  ],
+
+  "Mathematics": [
+    {"question":"det(A⁻¹)?","options":["det(A)","1/det(A)","0","-det(A)"],"answer":"1/det(A)"},
+    {"question":"Subsets of n elements?","options":["n","2^n","n^2","n!"],"answer":"2^n"},
+    {"question":"Eigenvalues of identity?","options":["0","1","-1","Depends"],"answer":"1"},
+    {"question":"At least one head in 2 tosses?","options":["1/4","1/2","3/4","1"],"answer":"3/4"},
+    {"question":"Derivative of e^x?","options":["e^x","x e^x","ln x","1/x"],"answer":"e^x"},
+    {"question":"Rank of zero matrix?","options":["1","0","n","Undefined"],"answer":"0"},
+    {"question":"Independent P(A∩B)?","options":["P(A)+P(B)","P(A)P(B)","P(A)/P(B)","0"],"answer":"P(A)P(B)"},
+    {"question":"log(ab)?","options":["log a+log b","log a-log b","log(a/b)","None"],"answer":"log a+log b"},
+    {"question":"Det of triangular matrix?","options":["Sum","Product","0","1"],"answer":"Product"},
+    {"question":"sin^2x+cos^2x?","options":["0","1","2","-1"],"answer":"1"},
+    {"question":"Mean of distribution?","options":["Median","Average","Mode","Range"],"answer":"Average"},
+    {"question":"Variance measures?","options":["Spread","Mean","Median","Mode"],"answer":"Spread"},
+    {"question":"Integral of 1/x?","options":["ln x","x","1/x","e^x"],"answer":"ln x"},
+    {"question":"Permutation formula?","options":["n!","nPr","nCr","n^2"],"answer":"nPr"},
+    {"question":"Combination formula?","options":["n!","nPr","nCr","n^2"],"answer":"nCr"},
+    {"question":"Slope formula?","options":["y2-y1/x2-x1","x2-x1/y2-y1","y/x","None"],"answer":"y2-y1/x2-x1"},
+    {"question":"Parallel lines slope?","options":["Equal","Zero","Infinite","Different"],"answer":"Equal"},
+    {"question":"Orthogonal vectors?","options":["Parallel","Perpendicular","Equal","None"],"answer":"Perpendicular"},
+    {"question":"Matrix multiplication condition?","options":["Rows=Cols","Cols=Rows","Rows match","Cols match"],"answer":"Cols=Rows"},
+    {"question":"Probability range?","options":["0-1","1-2","-1-1","0-∞"],"answer":"0-1"},
+    {"question":"Derivative of ln x?","options":["1/x","x","ln x","e^x"],"answer":"1/x"},
+    {"question":"Limit x→0 sinx/x?","options":["0","1","∞","-1"],"answer":"1"},
+    {"question":"Vector magnitude?","options":["Dot","Cross","Length","Angle"],"answer":"Length"},
+    {"question":"Standard deviation?","options":["Variance","√variance","Mean","Median"],"answer":"√variance"},
+    {"question":"Bayes theorem used for?","options":["Sorting","Probability","Geometry","Algebra"],"answer":"Probability"}
+  ],
+
+  "Science": [
+    {"question":"Unit of force?","options":["Joule","Newton","Watt","Pascal"],"answer":"Newton"},
+    {"question":"Speed of light?","options":["3×10^8","3×10^6","3×10^5","None"],"answer":"3×10^8"},
+    {"question":"pH neutral?","options":["0","7","14","1"],"answer":"7"},
+    {"question":"DNA full form?","options":["Deoxyribo","RNA","Protein","None"],"answer":"Deoxyribonucleic Acid"},
+    {"question":"Photosynthesis gas?","options":["O2","CO2","N2","H2"],"answer":"CO2"},
+    {"question":"SI unit power?","options":["Joule","Watt","Volt","Newton"],"answer":"Watt"},
+    {"question":"Blood filter organ?","options":["Heart","Kidney","Lungs","Liver"],"answer":"Kidney"},
+    {"question":"Acceleration unit?","options":["m/s","m/s²","kg","N"],"answer":"m/s²"},
+    {"question":"Ohm's law?","options":["V=IR","P=VI","F=ma","E=mc²"],"answer":"V=IR"},
+    {"question":"Energy unit?","options":["Watt","Joule","Newton","Volt"],"answer":"Joule"},
+    {"question":"Electron charge?","options":["+","-","0","None"],"answer":"-"},
+    {"question":"Largest organ?","options":["Heart","Skin","Brain","Liver"],"answer":"Skin"},
+    {"question":"Gas law PV=?","options":["nRT","RT","nT","P"],"answer":"nRT"},
+    {"question":"Water formula?","options":["H2O","CO2","O2","H2"],"answer":"H2O"},
+    {"question":"Boiling point water?","options":["90","100","80","70"],"answer":"100"},
+    {"question":"Gravity value?","options":["9.8","10","8","7"],"answer":"9.8"},
+    {"question":"Sound needs?","options":["Vacuum","Medium","Light","Heat"],"answer":"Medium"},
+    {"question":"Lens used in eye?","options":["Convex","Concave","Plane","None"],"answer":"Convex"},
+    {"question":"Plant food process?","options":["Respiration","Photosynthesis","Digestion","Absorption"],"answer":"Photosynthesis"},
+    {"question":"Atom smallest unit of?","options":["Matter","Energy","Force","Mass"],"answer":"Matter"},
+    {"question":"Metal property?","options":["Brittle","Conductive","Soft","None"],"answer":"Conductive"},
+    {"question":"Neuron function?","options":["Blood","Signal","Digest","Move"],"answer":"Signal"},
+    {"question":"Vitamin D source?","options":["Sun","Water","Air","Food"],"answer":"Sun"},
+    {"question":"Chemical bond sharing?","options":["Ionic","Covalent","Metallic","None"],"answer":"Covalent"},
+    {"question":"Pressure unit?","options":["Pascal","Newton","Watt","Joule"],"answer":"Pascal"}
+  ],
+
+  "Aptitude_Reasoning": [
+    {"question":"2,6,12,20,?","options":["28","30","32","34"],"answer":"30"},
+    {"question":"5x=20,x=?","options":["2","3","4","5"],"answer":"4"},
+    {"question":"Odd one out?","options":["Apple","Banana","Carrot","Mango"],"answer":"Carrot"},
+    {"question":"CAT value?","options":["24","20","21","23"],"answer":"24"},
+    {"question":"Speed 60 for 2h?","options":["100","110","120","130"],"answer":"120"},
+    {"question":"Clock at 3?","options":["90","180","0","45"],"answer":"90"},
+    {"question":"3,9,27,?","options":["54","81","72","90"],"answer":"81"},
+    {"question":"Find missing 5,10,20,40,?","options":["60","80","90","100"],"answer":"80"},
+    {"question":"A is taller than B, B than C →?","options":["A>C","C>A","Equal","None"],"answer":"A>C"},
+    {"question":"Odd: 2,3,5,9","options":["2","3","5","9"],"answer":"9"},
+    {"question":"Ratio 2:3, total 10?","options":["4,6","5,5","3,7","2,8"],"answer":"4,6"},
+    {"question":"Simple interest formula?","options":["P*T*R","P+R","T+R","P*R"],"answer":"P*T*R"},
+    {"question":"If 8:4=2 then 16:8=?","options":["2","4","6","8"],"answer":"2"},
+    {"question":"Alphabet next after Z?","options":["A","B","Y","None"],"answer":"A"},
+    {"question":"Opposite of increase?","options":["Rise","Grow","Decrease","Boost"],"answer":"Decrease"},
+    {"question":"If day=24h, 3 days?","options":["48","72","96","36"],"answer":"72"},
+    {"question":"Train 100m in 10s speed?","options":["10","20","30","40"],"answer":"10"},
+    {"question":"Odd: Circle, Square, Triangle, Cube","options":["Cube","Circle","Square","Triangle"],"answer":"Cube"},
+    {"question":"Binary of 2?","options":["10","11","01","00"],"answer":"10"},
+    {"question":"Find next: 1,4,9,16,?","options":["20","25","30","36"],"answer":"25"},
+    {"question":"Mirror of LEFT?","options":["TFEL","LEFT","ELTF","FTEL"],"answer":"TFEL"},
+    {"question":"If 1→A then 3→?","options":["C","B","D","E"],"answer":"C"},
+    {"question":"Sum 1 to 10?","options":["45","50","55","60"],"answer":"55"},
+    {"question":"Cube of 3?","options":["6","9","27","18"],"answer":"27"},
+    {"question":"Odd: Dog, Cat, Lion, Car","options":["Dog","Cat","Lion","Car"],"answer":"Car"}
+  ],
+  
+  "Machine_Learning_AI": [
+    {"question":"What does overfitting mean?","options":["Model too simple","Model fits training data too well","Model underperforms","Data is noisy"],"answer":"Model fits training data too well"},
+    {"question":"Which algorithm is used for classification?","options":["Linear Regression","Logistic Regression","K-Means","PCA"],"answer":"Logistic Regression"},
+    {"question":"Loss function in regression?","options":["Cross entropy","MSE","Accuracy","Recall"],"answer":"MSE"},
+    {"question":"Which is unsupervised learning?","options":["SVM","K-Means","Logistic Regression","Decision Tree"],"answer":"K-Means"},
+    {"question":"Gradient descent is used to?","options":["Increase error","Optimize loss","Split data","Normalize"],"answer":"Optimize loss"},
+    
+    {"question":"Which activation function outputs 0-1?","options":["ReLU","Sigmoid","Tanh","Softmax"],"answer":"Sigmoid"},
+    {"question":"What is bias in ML?","options":["Error from assumptions","Variance","Noise","Data"],"answer":"Error from assumptions"},
+    {"question":"High variance leads to?","options":["Underfitting","Overfitting","Perfect model","No error"],"answer":"Overfitting"},
+    {"question":"Which metric for classification?","options":["MSE","RMSE","Accuracy","Variance"],"answer":"Accuracy"},
+    {"question":"Decision tree splits based on?","options":["Random","Entropy/Gini","Mean","Variance"],"answer":"Entropy/Gini"},
+    
+    {"question":"Which reduces dimensionality?","options":["PCA","KNN","SVM","Naive Bayes"],"answer":"PCA"},
+    {"question":"KNN depends on?","options":["Neighbors","Trees","Gradient","Loss"],"answer":"Neighbors"},
+    {"question":"Naive Bayes assumes?","options":["Dependence","Independence","Correlation","Noise"],"answer":"Independence"},
+    {"question":"SVM tries to maximize?","options":["Loss","Margin","Error","Distance"],"answer":"Margin"},
+    {"question":"Learning rate controls?","options":["Speed of learning","Accuracy","Data size","Epochs"],"answer":"Speed of learning"},
+    
+    {"question":"Epoch means?","options":["One data point","Full dataset pass","Batch size","Iteration"],"answer":"Full dataset pass"},
+    {"question":"Batch size is?","options":["Dataset size","Samples per update","Epoch count","Iterations"],"answer":"Samples per update"},
+    {"question":"ReLU function output?","options":["x","max(0,x)","-x","1/x"],"answer":"max(0,x)"},
+    {"question":"Tanh range?","options":["0 to1","-1 to1","0 to∞","-∞ to∞"],"answer":"-1 to1"},
+    {"question":"Softmax used for?","options":["Regression","Binary","Multiclass","Clustering"],"answer":"Multiclass"},
+    
+    {"question":"What is regularization?","options":["Increase complexity","Reduce overfitting","Add noise","Remove data"],"answer":"Reduce overfitting"},
+    {"question":"L1 regularization leads to?","options":["Dense weights","Sparse weights","No change","More error"],"answer":"Sparse weights"},
+    {"question":"Dropout used for?","options":["Speed","Overfitting","Accuracy","Scaling"],"answer":"Overfitting"},
+    {"question":"Confusion matrix measures?","options":["Regression","Classification performance","Loss","Gradient"],"answer":"Classification performance"},
+    {"question":"Which is reinforcement learning?","options":["Q-learning","KNN","PCA","SVM"],"answer":"Q-learning"}
+  ]
+
+}
