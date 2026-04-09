@@ -3,6 +3,7 @@
 import socket
 import threading
 import json
+import random
 import time
 import sys
 import os
@@ -22,14 +23,17 @@ QUESTIONS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__
 clients = {}
 scores = {}
 lock = threading.Lock()
-answers_received = {}
-answer_event = threading.Event()
 game_started = False
+
+# Per-round state — replaced each round, not a global accumulator
+current_round_answers = {}
+current_round_event = threading.Event()
 
 
 def load_questions() -> list:
     with open(QUESTIONS_FILE, "r") as f:
-        return json.load(f)
+        data = json.load(f)
+    return random.sample(data, 10)
 
 
 def send_to(conn, message: str):
@@ -91,8 +95,7 @@ def handle_join(conn, addr):
     except Exception as e:
         print(f"[Server] Error handling join: {e}")
         with lock:
-            if conn in clients:
-                del clients[conn]
+            clients.pop(conn, None)
         conn.close()
 
 
@@ -109,38 +112,43 @@ def handle_client_answers(conn, username):
                 line = line.strip()
                 if line.startswith("ANSWER|"):
                     answer = line.split("|", 1)[1]
+                    answer_time = time.time()
                     with lock:
-                        if username not in answers_received:
-                            answers_received[username] = (answer, None)
-                    print(f"[Server] Answer from '{username}': {answer}")
-                    with lock:
-                        if len(answers_received) >= len(clients):
-                            answer_event.set()
+                        # Only record first answer per player per round
+                        if username not in current_round_answers:
+                            current_round_answers[username] = (answer, answer_time)
+                            print(f"[Server] Answer from '{username}': {answer}")
+                        # Signal if all active clients have answered
+                        if len(current_round_answers) >= len(clients):
+                            current_round_event.set()
         except Exception:
             break
 
     print(f"[Server] '{username}' disconnected.")
     with lock:
         clients.pop(conn, None)
+        # If remaining clients have all answered, unblock the round
+        if clients and len(current_round_answers) >= len(clients):
+            current_round_event.set()
 
 
 def broadcast_question(question: str):
     broadcast(f"QUESTION|{question}")
 
 
-def receive_answers(correct_answer: str, timeout: float) -> dict:
-    global answers_received
-    answers_received = {}
-    answer_event.clear()
+def receive_answers(timeout: float) -> dict:
+    global current_round_answers
+    with lock:
+        current_round_answers = {}
+        current_round_event.clear()
 
     deadline = time.time() + timeout
-    answer_event.wait(timeout=timeout)
-
-    time_remaining = max(0, deadline - time.time())
+    current_round_event.wait(timeout=timeout)
 
     result = {}
     with lock:
-        for username, (ans, _) in answers_received.items():
+        for username, (ans, answer_time) in current_round_answers.items():
+            time_remaining = max(0, deadline - answer_time)
             result[username] = (ans, time_remaining)
 
     return result
@@ -175,7 +183,7 @@ def run_quiz(questions: list):
 
         broadcast(f"TIMER|{QUESTION_TIMEOUT}")
 
-        received = receive_answers(correct_answer, timeout=QUESTION_TIMEOUT)
+        received = receive_answers(timeout=QUESTION_TIMEOUT)
 
         with lock:
             current_clients = dict(clients)
