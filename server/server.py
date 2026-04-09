@@ -136,6 +136,15 @@ def broadcast_question(question: str):
     broadcast(f"QUESTION|{question}")
 
 
+
+def broadcast_question(question: str, options: list = None):
+    if options:
+        options_str = ",".join(options)
+        broadcast(f"QUESTION|{question}||{options_str}")
+    else:
+        broadcast(f"QUESTION|{question}")
+
+
 def receive_answers(timeout: float) -> dict:
     global current_round_answers
     with lock:
@@ -175,7 +184,8 @@ def run_quiz(questions: list):
 
         print(f"\n[Server] Q{i}: {question_text} | Answer: {correct_answer}")
         broadcast(f"INFO|Question {i} of {len(questions)}")
-        broadcast_question(question_text)
+       
+        broadcast_question(question_text, q.get("options", []))
 
         if acceptable:
             hints = ", ".join(acceptable)
