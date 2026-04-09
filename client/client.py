@@ -54,7 +54,7 @@ def receive_question(message: str):
             label = labels[i] if i < len(labels) else str(i + 1)
             print(f"      {label}) {opt.strip()}")
     print(f"  {'─'*50}")
-    print("  Your answer: ", end="", flush=True)
+    #print("  Your answer: ", end="", flush=True)
 
 
 def handle_server_message(message: str):
