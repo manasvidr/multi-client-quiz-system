@@ -180,16 +180,11 @@ def run_quiz(questions: list):
     for i, q in enumerate(questions, 1):
         question_text = q["question"]
         correct_answer = q["answer"]
-        acceptable = q.get("acceptable", None)
 
         print(f"\n[Server] Q{i}: {question_text} | Answer: {correct_answer}")
         broadcast(f"INFO|Question {i} of {len(questions)}")
-       
-        broadcast_question(question_text, q.get("options", []))
 
-        if acceptable:
-            hints = ", ".join(acceptable)
-            broadcast(f"INFO|Acceptable answers include: {hints}")
+        broadcast_question(question_text, q.get("options", []))
 
         broadcast(f"TIMER|{QUESTION_TIMEOUT}")
 
@@ -201,7 +196,7 @@ def run_quiz(questions: list):
         for conn, username in current_clients.items():
             if username in received:
                 answer, time_remaining = received[username]
-                correct = check_answer(answer, correct_answer, acceptable)
+                correct = check_answer(answer, correct_answer)
                 update_score(scores, username, correct, time_remaining)
                 status = "✓ Correct" if correct else "✗ Wrong"
                 send_to(conn, f"RESULT|{status}! Answer was: {correct_answer}")
