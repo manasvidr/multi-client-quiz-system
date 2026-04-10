@@ -208,6 +208,7 @@ def run_quiz(questions: list):
 
     broadcast("INFO|Quiz Over! Final scores:")
     send_results()
+    time.sleep(3)
     broadcast("END|Thanks for playing!")
     print("\n[Server] Quiz complete.")
 
