@@ -245,9 +245,9 @@ def start_server():
             break
         time.sleep(1)
 
-    print(f"[Server] {MIN_PLAYERS}+ players connected. Starting in 5 seconds...")
-    broadcast(f"INFO|Enough players joined! Starting in 5 seconds...")
-    time.sleep(5)
+    print(f"[Server] {MIN_PLAYERS}+ players connected. Starting in 10 seconds...")
+    broadcast(f"INFO|Enough players joined! Starting in 10 seconds...")
+    time.sleep(10)
 
     questions = load_questions()
     run_quiz(questions)
