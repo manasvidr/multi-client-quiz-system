@@ -1,16 +1,7 @@
-def check_answer(player_answer: str, correct_answer: str, acceptable: list = None) -> bool:
+def check_answer(player_answer: str, correct_answer: str) -> bool:
     norm_player = player_answer.strip().lower()
     norm_correct = correct_answer.strip().lower()
-
-    if norm_player == norm_correct:
-        return True
-
-    if acceptable:
-        for alt in acceptable:
-            if norm_player == alt.strip().lower():
-                return True
-
-    return False
+    return norm_player == norm_correct
 
 
 def update_score(scores: dict, username: str, correct: bool, time_remaining: float = 0) -> dict:
