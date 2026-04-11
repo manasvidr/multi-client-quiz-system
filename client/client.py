@@ -4,12 +4,14 @@ import socket
 import threading
 import sys
 import os
+import ssl
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from game_logic.leaderboard import display_leaderboard
 
 HOST = "127.0.0.1"
 PORT = 5555
+CERT_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "server.crt")
 
 current_question = None
 waiting_for_answer = False
@@ -18,9 +20,15 @@ current_options = []
 
 
 def connect_to_server(host: str, port: int) -> socket.socket:
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host, port))
-    return s
+    raw_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    raw_socket.connect((host, port))
+
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    ssl_context.load_verify_locations(CERT_FILE)
+    ssl_context.check_hostname = False   # using IP, not a domain name
+
+    secure_socket = ssl_context.wrap_socket(raw_socket)
+    return secure_socket
 
 
 def send_message(sock: socket.socket, message: str):
