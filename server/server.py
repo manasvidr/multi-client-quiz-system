@@ -7,6 +7,7 @@ import random
 import time
 import sys
 import os
+import ssl
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -19,6 +20,8 @@ MIN_PLAYERS = 2
 MAX_PLAYERS = 10
 QUESTION_TIMEOUT = 15
 QUESTIONS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "questions.json")
+CERT_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "server.crt")
+KEY_FILE  = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "server.key")
 
 clients = {}
 scores = {}
@@ -50,12 +53,18 @@ def broadcast(message: str, exclude=None):
                 send_to(conn, message)
 
 
-def accept_clients(server_socket):
+def accept_clients(server_socket, ssl_context):
     print(f"[Server] Waiting for players on {HOST}:{PORT}...")
     while True:
         try:
             conn, addr = server_socket.accept()
-            threading.Thread(target=handle_join, args=(conn, addr), daemon=True).start()
+            try:
+                secure_conn = ssl_context.wrap_socket(conn, server_side=True)
+            except ssl.SSLError as e:
+                print(f"[Server] SSL handshake failed from {addr}: {e}")
+                conn.close()
+                continue
+            threading.Thread(target=handle_join, args=(secure_conn, addr), daemon=True).start()
         except OSError:
             break
 
@@ -232,10 +241,15 @@ def start_server():
     server_socket.bind((HOST, PORT))
     server_socket.listen(MAX_PLAYERS)
 
+    # Set up SSL context
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    ssl_context.load_cert_chain(certfile=CERT_FILE, keyfile=KEY_FILE)
+    print(f"[Server] SSL enabled with cert: {CERT_FILE}")
+
     print(f"[Server] Started on {HOST}:{PORT}")
     print(f"[Server] Waiting for {MIN_PLAYERS}–{MAX_PLAYERS} players...\n")
 
-    accept_thread = threading.Thread(target=accept_clients, args=(server_socket,), daemon=True)
+    accept_thread = threading.Thread(target=accept_clients, args=(server_socket, ssl_context), daemon=True)
     accept_thread.start()
 
     while True:
@@ -245,9 +259,9 @@ def start_server():
             break
         time.sleep(1)
 
-    print(f"[Server] {MIN_PLAYERS}+ players connected. Starting in 10 seconds...")
-    broadcast(f"INFO|Enough players joined! Starting in 10 seconds...")
-    time.sleep(10)
+    print(f"[Server] {MIN_PLAYERS}+ players connected. Starting in 5 seconds...")
+    broadcast(f"INFO|Enough players joined! Starting in 5 seconds...")
+    time.sleep(5)
 
     questions = load_questions()
     run_quiz(questions)
